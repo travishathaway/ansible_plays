@@ -1,0 +1,25 @@
+- name: Install gunicorn via conda
+  shell: PATH=/opt/miniconda/bin:${PATH} conda install -y gunicorn
+
+- name: Copy upstart config to wsgi host
+  become: yes
+  become_method: sudo
+  template: src=webapp_upstart.conf dest=/etc/init/webapp.conf owner=root
+            group=root mode=0644
+
+- name: Copy uwsgi ini to wsgi host
+  become: yes
+  become_method: sudo
+  template: src=gunicorn.ini dest={{web_app_root_dir}}/gunicorn.ini owner=webapp
+            group=webapp mode=0644
+
+# Restarting currently does not work
+- name: Stop the gunicorn daemon
+  become: yes
+  become_method: sudo
+  service: name=webapp state=stopped
+
+- name: Start the gunicorn daemon
+  become: yes
+  become_method: sudo
+  service: name=webapp state=started

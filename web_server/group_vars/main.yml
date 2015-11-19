@@ -1,0 +1,3 @@
+# App settings
+web_app_root_dir: /opt/webapp/
+web_app_miniconda_bin: /opt/miniconda/bin/
