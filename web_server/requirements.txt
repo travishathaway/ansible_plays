@@ -1,2 +1,4 @@
 jdauphant.nginx
 jdauphant.ssl-certs
+zenoamaro.postgresql
+robinandeer.miniconda

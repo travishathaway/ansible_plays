@@ -1,3 +1,4 @@
 # App settings
-web_app_root_dir: /opt/webapp/
-web_app_miniconda_bin: /opt/miniconda/bin/
+app_user: webapp
+web_app_miniconda_path: /home/ubuntu/miniconda
+web_app_miniconda_bin: "{{web_app_miniconda_path}}/bin"

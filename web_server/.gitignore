@@ -1,2 +1,4 @@
 roles/jdauphant.nginx 
 roles/jdauphant.ssl-certs
+roles/robinandeer.miniconda
+roles/zenoamaro.postgresql

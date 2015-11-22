@@ -1,0 +1,29 @@
+- name: Clone repository
+  become: yes
+  become_user: "{{oregon_measures_app_user}}"
+  git: dest=/home/{{oregon_measures_app_user}}/oregon_measures
+       repo=git://github.com/travishathaway/oregon-measures.git
+       accept_hostkey=yes
+
+- name: Install gunicorn
+  command: "{{oregon_measures_bin}}/conda install gunicorn -y"
+
+- name: Install dependencies
+  pip: executable={{oregon_measures_bin}}/pip
+       requirements=/home/{{oregon_measures_app_user}}/oregon_measures/requirements.txt
+
+- name: Copy upstart config
+  become: yes
+  become_method: sudo
+  template: src=oregon_measures.conf dest=/etc/init/oregon_measures.conf
+
+- name: Copy gunicorn ini
+  become: yes
+  become_user: "{{oregon_measures_app_user}}"
+  template: src=oregon_measures.ini 
+            dest=/home/{{oregon_measures_app_user}}/oregon_measures/oregon_measures.ini
+
+- name: Start oregon_measures service
+  become: yes
+  become_method: sudo
+  service: name=oregon_measures state=restarted

@@ -1,0 +1,11 @@
+oregon_measures_app_user: webapp
+oregon_measures_bin: ''
+oregon_measures_base_url: /
+oregon_measures_static_url: /static/
+oregon_measures_db_host: localhost
+oregon_measures_db_port: 5432
+oregon_measures_db_user: oregon_measures
+oregon_measures_db_name: oregon_measures
+oregon_measures_db_pass: ''
+oregon_measures_wsgi_port: 8000
+oregon_measures_wsgi_workers: 2

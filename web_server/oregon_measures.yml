@@ -1,0 +1,16 @@
+---
+- hosts: "webserver"
+  vars_files:
+    - group_vars/main.yml
+  vars:
+    miniconda_home: "{{web_app_miniconda_path}}"
+    oregon_measures_app_user: "{{app_user}}"
+    oregon_measures_bin: "{{web_app_miniconda_bin}}"
+    oregon_measures_static_url: /oregon_measures/static
+    oregon_measures_base_url: /oregon_measures/
+    oregon_measures_db_pass: "NaNaNaNaNaNaNaNaNaNaNaNa Bat Man!!"
+    oregon_measures_wsgi_port: 8000
+  roles:
+    - role: os_config
+    - role: robinandeer.miniconda
+    - role: oregon-measures

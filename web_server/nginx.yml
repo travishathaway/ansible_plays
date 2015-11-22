@@ -1,0 +1,27 @@
+---
+- hosts: "webserver"
+  vars_files:
+    - group_vars/main.yml
+  roles:
+    - role: jdauphant.ssl-certs
+      become: yes
+      become_method: sudo
+    - role: jdauphant.nginx
+      become: yes
+      become_method: sudo
+      nginx_configs:
+        ssl:
+          - ssl_certificate_key {{ssl_certs_privkey_path}}
+          - ssl_certificate {{ssl_certs_cert_path}}
+      nginx_sites:
+        default:
+          - listen *:80
+          - server_name travishathaway.com www.travishathaway.com
+          - location /oregon_measures { 
+              proxy_pass http://localhost:8000;
+              proxy_set_header Host            $host;
+              proxy_set_header X-Real-IP       $remote_addr;
+            }
+          - location /oregon_measures/static/ {
+              root /home/{{app_user}};
+            }

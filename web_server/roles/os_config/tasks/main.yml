@@ -1,0 +1,14 @@
+- name: Create user for running wsgi server
+  become: yes
+  become_method: sudo
+  user: name={{app_user}} shell=/bin/bash state=present
+
+- name: Install required dependencies
+  become: yes
+  become_method: sudo
+  apt: name={{item}} update_cache=yes
+  with_items:
+    - python-dev
+    - build-essential
+    - libpq-dev
+    - git-core

@@ -1,0 +1,9 @@
+---
+- hosts: "webserver"
+  vars_files:
+    - group_vars/main.yml
+  vars:
+    postgresql_postgis: yes
+  roles:
+    - role: zenoamaro.postgresql
+
