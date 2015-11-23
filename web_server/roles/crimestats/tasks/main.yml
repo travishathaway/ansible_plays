@@ -1,0 +1,32 @@
+- name: Clone repository
+  become: yes
+  become_user: "{{crimestats_app_user}}"
+  git: dest=/home/{{crimestats_app_user}}/crimestats
+       repo=git://github.com/travishathaway/crimestats.git
+       accept_hostkey=yes
+
+- name: Install gunicorn
+  command: "{{crimestats_bin}}/conda install gunicorn -y"
+
+- name: Install conda dependencies
+  command: "{{crimestats_bin}}/conda install --file /home/{{crimestats_app_user}}/crimestats/conda_requirements.txt -y"
+
+- name: Install dependencies
+  pip: executable={{crimestats_bin}}/pip
+       requirements=/home/{{crimestats_app_user}}/crimestats/requirements.txt
+
+- name: Copy upstart config
+  become: yes
+  become_method: sudo
+  template: src=crimestats.conf dest=/etc/init/crimestats.conf
+
+- name: Copy gunicorn ini
+  become: yes
+  become_user: "{{crimestats_app_user}}"
+  template: src=crimestats.ini 
+            dest=/home/{{crimestats_app_user}}/crimestats/crimestats.ini
+
+- name: Start crimestats service
+  become: yes
+  become_method: sudo
+  service: name=crimestats state=restarted

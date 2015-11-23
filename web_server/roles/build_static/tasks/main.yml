@@ -1,0 +1,96 @@
+- name: Install dependencies (Redhat)
+  become: yes
+  become_method: sudo
+  yum: name={{item}} state=present
+  when: ansible_os_family == "RedHat"
+  with_items:
+  - python-pip
+  - python-devel
+  - git
+  - nodejs
+  - npm
+  - ruby
+  - ruby-devel
+  - rubygems
+  - rubygems-devel
+
+- name: Install dependencies (Ubuntu)
+  become: yes
+  become_method: sudo
+  apt: name={{item}} state=present update_cache=yes
+  when: ansible_os_family == "Debian"
+  with_items:
+  - python-pip
+  - python-dev
+  - build-essential
+  - git-core
+  - nodejs
+  - npm
+  - ruby
+  - ruby-dev
+  - ruby-full
+
+- name: Install python-boto (Ubuntu)
+  become: yes
+  become_method: sudo
+  pip: name=boto state=present
+
+- name: Fix node executable problem in Ubuntu
+  when: ansible_os_family == "Debian"
+  become: yes
+  become_method: sudo
+  file: src=/usr/bin/nodejs dest=/usr/bin/node state=link
+
+- name: Install dependencies (Mac OS)
+  homebrew: name=nodejs state=present
+  when: ansible_os_family == "Darwin"
+
+- name: Install compass
+  become: yes
+  become_method: sudo
+  command: gem install {{item}}
+  with_items:
+  - sass
+  - multi_json
+  - compass-core
+  - compass-import-once
+  - chunky_png
+  - rb-fsevent
+  - ffi
+  - rb-inotify
+  - compass
+
+- name: Create build directory
+  file: dest={{build_static_build_dir}} state=directory mode=0700
+
+- name: Clone Git repo
+  git: repo={{build_static_repo_url}}
+       dest={{build_static_build_dir}}
+       version={{build_static_repo_branch}}
+
+- name: Install npm dependencies
+  become: yes
+  become_method: sudo
+  npm: name={{item}} path={{build_static_build_dir}}/frontend global=yes
+  with_items:
+      - coffee-script
+      - grunt-cli
+      - bower
+
+- name: Install project bower dependencies
+  command: bower install
+  args:
+      chdir:  "{{build_static_build_dir}}/frontend"
+
+- name: Install project npm dependencies
+  command: npm install
+  args:
+      chdir: "{{build_static_build_dir}}/frontend"
+
+- name: Run build script
+  command: grunt build
+  args:
+    chdir: "{{build_static_build_dir}}/frontend"
+
+# - name: Clean up build location
+#   file: path="{{build_static_build_dir}}" state=absent

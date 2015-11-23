@@ -1,0 +1,14 @@
+---
+- hosts: "webserver"
+  vars_files:
+    - group_vars/main.yml
+  vars:
+    miniconda_home: "{{web_app_miniconda_path}}"
+    crimestats_app_user: "{{app_user}}"
+    crimestats_bin: "{{web_app_miniconda_bin}}"
+    crimestats_db_pass: "narf"
+    crimestats_wsgi_port: 8001
+  roles:
+    - role: os_config
+    - role: robinandeer.miniconda
+    - role: crimestats

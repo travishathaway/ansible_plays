@@ -1,3 +1,7 @@
+static:
+	ansible-playbook static.yml -i hosts --ask-become-pass
+cs:
+	ansible-playbook crimestats.yml -i hosts
 om:
 	ansible-playbook oregon_measures.yml -i hosts
 nginx:

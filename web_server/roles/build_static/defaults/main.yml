@@ -1,0 +1,2 @@
+build_static_build_dir: "/tmp/build_static_{{ansible_user_id}}"
+build_static_repo_branch: "master"
