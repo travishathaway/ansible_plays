@@ -4,9 +4,16 @@
     - group_vars/main.yml
   vars:
     miniconda_home: "{{web_app_miniconda_path}}"
+    miniconda_environments:
+      - name: python3
+        python_version: 3.4
+        pkgs: 'pip'
     crimestats_app_user: "{{app_user}}"
     crimestats_bin: "{{web_app_miniconda_bin}}"
     crimestats_db_pass: "narf"
+    crimestats_db_user: "thath"
+    crimestats_db_name: "thath"
+    crimestats_db_host: "localhost"
     crimestats_wsgi_port: 8001
   roles:
     - role: os_config
