@@ -1,7 +1,7 @@
 - name: Clone repository
   become: yes
   become_user: "{{crimestats_app_user}}"
-  git: dest=/home/{{crimestats_app_user}}/crimestats
+  git: dest={{crimestats_app_root}}
        repo=git://github.com/travishathaway/crimestats.git
        accept_hostkey=yes
 
@@ -9,11 +9,11 @@
   command: "{{crimestats_bin}}/conda install gunicorn -y"
 
 - name: Install conda dependencies
-  command: "{{crimestats_bin}}/conda install --file /home/{{crimestats_app_user}}/crimestats/conda_requirements.txt -y"
+  command: "{{crimestats_bin}}/conda install --file {{crimestats_app_root}}conda_requirements.txt -y"
 
 - name: Install dependencies
   pip: executable={{crimestats_bin}}/pip
-       requirements=/home/{{crimestats_app_user}}/crimestats/requirements.txt
+       requirements={{crimestats_app_root}}requirements.txt
 
 - name: Copy upstart config
   become: yes
@@ -24,7 +24,7 @@
   become: yes
   become_user: "{{crimestats_app_user}}"
   template: src=crimestats.ini 
-            dest=/home/{{crimestats_app_user}}/crimestats/crimestats.ini
+            dest={{crimestats_app_root}}crimestats.ini
 
 - name: Start crimestats service
   become: yes

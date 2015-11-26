@@ -1,3 +1,4 @@
+crimestats_app_root: ''
 crimestats_app_user: webapp
 crimestats_bin: ''
 crimestats_db_host: localhost
