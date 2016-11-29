@@ -1,0 +1,29 @@
+[Unit]
+Description=gunicorn daemon for crimestats
+Requires=crimestats.socket
+After=network.target
+
+[Service]
+PIDFile={{crimestats_app_root}}/pid
+
+Environment=APP_DB_HOST={{crimestats_db_host}}
+Environment=APP_DB_PORT={{crimestats_db_port}}
+Environment=APP_DB_USER={{crimestats_db_user}}
+Environment=APP_DB_PASS={{crimestats_db_pass}}
+Environment=APP_DB_NAME={{crimestats_db_name}}
+
+Group={{crimestats_app_user}}
+User={{crimestats_app_user}}
+
+WorkingDirectory={{crimestats_app_root}}
+
+ExecStart={{crimestats_bin}}/gunicorn --pid {{crimestats_app_root}}/pid run:app
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s TERM $MAINPID
+
+PrivateTmp=true
+
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

@@ -15,10 +15,36 @@
   pip: executable={{crimestats_bin}}/pip
        requirements={{crimestats_app_root}}requirements.txt
 
-- name: Copy upstart config
+- name: Ensure doc root exists
   become: yes
   become_method: sudo
-  template: src=crimestats.conf dest=/etc/init/crimestats.conf
+  file: >
+    path={{crimestats_app_doc_root}} owner={{ansible_ssh_user}}
+    group={{ansible_ssh_user}} state=directory
+
+- name: Copy systemd service config
+  become: yes
+  become_method: sudo
+  template: src=crimestats.service dest=/lib/systemd/system/crimestats.service
+
+- name: Make symlink for service file
+  become: yes
+  become_method: sudo
+  file: >
+      src=/lib/systemd/system/crimestats.service 
+      dest=/etc/systemd/system/multi-user.target.wants/crimestats.service state=link
+
+- name: Copy systemd socket config
+  become: yes
+  become_method: sudo
+  template: src=crimestats.socket dest=/lib/systemd/system/crimestats.socket
+
+- name: Make symlink for socket file
+  become: yes
+  become_method: sudo
+  file: > 
+      src=/lib/systemd/system/crimestats.socket 
+      dest=/etc/systemd/system/multi-user.target.wants/crimestats.socket state=link
 
 - name: Copy gunicorn ini
   become: yes
@@ -29,4 +55,4 @@
 - name: Start crimestats service
   become: yes
   become_method: sudo
-  service: name=crimestats state=restarted
+  systemd: name=crimestats state=restarted daemon_reload=yes

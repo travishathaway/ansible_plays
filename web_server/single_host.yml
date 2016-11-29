@@ -1,0 +1,22 @@
+---
+- hosts: tag_type_webserver
+  become: yes
+  become_method: sudo
+  vars_files:
+    - group_vars/main.yml
+    - group_vars/private.yml
+
+  roles:
+    - geerlingguy.nginx
+    - geerlingguy.postgresql
+
+- hosts: tag_type_webserver
+  vars_files:
+    - group_vars/main.yml
+    - group_vars/private.yml
+
+  roles:
+    - os_config
+    - uchida.miniconda
+    - crimestats
+

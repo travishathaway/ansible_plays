@@ -1,9 +1,14 @@
 ---
-- hosts: "localhost"
+- hosts: localhost
+  connection: local
   vars_files:
     - group_vars/main.yml
+    - group_vars/private.yml
   vars:
     build_static_repo_url: https://github.com/travishathaway/crimestats.git
     build_static_repo_branch: master
+    build_static_app_doc_root: "{{crimestats_app_doc_root}}"
+    build_static_dest_host: "{{aws_elastic_ip}}"
+    build_static_ssh_user: ubuntu
   roles:
     - role: build_static

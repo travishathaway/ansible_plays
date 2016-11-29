@@ -1,4 +1,48 @@
+# AWS Settings
+aws_ssh_key: thath
+aws_ami: "ami-5b7dd33b"  # Ubuntu 16.04 LTS w/ssd und Python
+aws_security_group: webserver
+aws_region: "us-west-2"
+
 # App settings
 app_user: webapp
 web_app_miniconda_path: /home/ubuntu/miniconda
 web_app_miniconda_bin: "{{web_app_miniconda_path}}/bin"
+
+# Crimestats vars
+crimestats_db_pass: "{{app_db_password}}"
+crimestats_db_user: "thath"
+crimestats_db_name: "crimestats"
+crimestats_db_host: "localhost"
+crimestats_app_root: "/home/{{app_user}}/crimestats/"
+crimestats_app_user: "{{app_user}}"
+crimestats_app_host: "localhost"
+crimestats_app_port: 8000
+crimestats_app_doc_root: "/var/www/crimestats/"
+crimestats_bin: "/home/ubuntu/miniconda3/bin"
+
+# Oregon Measures vars
+# (coming to a config file near you this Winter...)
+
+# Nginx sites/settings
+nginx_vhosts:
+  - listen: "80"
+    server_name: "crimestats.travishathaway.com"
+    client_max_body_size: 256m
+    client_body_buffer_size: 16m
+    root: "{{crimestats_app_doc_root}}"
+    charset: utf-8
+    extra_parameters: |
+      location /api {
+          proxy_pass http://{{crimestats_app_host}}:{{crimestats_app_port}};
+          proxy_set_header Host            $host;
+          proxy_set_header X-Real-IP       $remote_addr;
+      }
+
+# PosgreSQL settings
+postgresql_databases:
+  - name: "{{crimestats_db_name}}"
+postgresql_users:
+  - name: "{{crimestats_db_user}}"
+    password: "{{crimestats_db_pass}}"
+

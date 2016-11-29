@@ -34,6 +34,7 @@
   become: yes
   become_method: sudo
   pip: name=boto state=present
+  when: ansible_os_family == "Debian"
 
 - name: Fix node executable problem in Ubuntu
   when: ansible_os_family == "Debian"
@@ -59,6 +60,7 @@
   - ffi
   - rb-inotify
   - compass
+  when: ansible_os_family == "Debian" or ansible_os_family == "RedHat"
 
 - name: Create build directory
   file: dest={{build_static_build_dir}} state=directory mode=0700
@@ -82,7 +84,7 @@
   args:
       chdir:  "{{build_static_build_dir}}/frontend"
 
-- name: Install project npm dependencies
+- name: Install project npm dependenciess
   command: npm install
   args:
       chdir: "{{build_static_build_dir}}/frontend"
@@ -92,5 +94,10 @@
   args:
     chdir: "{{build_static_build_dir}}/frontend"
 
-# - name: Clean up build location
-#   file: path="{{build_static_build_dir}}" state=absent
+- name: Transfer files
+  command: >
+    rsync -r {{build_static_build_dir}}/frontend/dist/
+    {{build_static_ssh_user}}@{{build_static_dest_host}}:{{build_static_app_doc_root}}
+
+- name: Clean up build location
+  file: path="{{build_static_build_dir}}" state=absent

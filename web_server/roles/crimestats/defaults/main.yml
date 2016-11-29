@@ -1,10 +1,13 @@
 crimestats_app_root: ''
 crimestats_app_user: webapp
+crimestats_app_host: localhost
+crimestats_app_port: 8001
+crimestats_app_doc_root: "/var/www/crimestats"
 crimestats_bin: ''
 crimestats_db_host: localhost
 crimestats_db_port: 5432
 crimestats_db_user: crimestats
 crimestats_db_name: crimestats
 crimestats_db_pass: ''
-crimestats_wsgi_port: 8001
+crimestats_wsgi_port: "{{crimestats_app_port}}"
 crimestats_wsgi_workers: 2

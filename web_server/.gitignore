@@ -1,4 +1,9 @@
-roles/jdauphant.nginx 
-roles/jdauphant.ssl-certs
-roles/robinandeer.miniconda
-roles/zenoamaro.postgresql
+*.retry
+
+.idea
+
+.vault-pass.txt
+
+group_vars/private.yml
+
+NOTES.txt
