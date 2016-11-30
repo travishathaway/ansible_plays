@@ -4,6 +4,8 @@
 
 .vault-pass.txt
 
+.private
+
 group_vars/private.yml
 
 NOTES.txt
